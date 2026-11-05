@@ -102,13 +102,16 @@ app.get('/api/rooms', async (req, res) => {
   }
 });
 
-// FILE UPLOAD API
+// FILE UPLOAD API (Dynamic URL fix for Render)
 app.post('/api/rooms/upload', upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const fileUrl = `http://localhost:5000/uploads/${req.file.filename}`;
+    const host = req.get('host');
+    const protocol = req.protocol;
+    const fileUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+
     res.status(200).json({ 
       fileName: req.file.originalname, 
       fileUrl: fileUrl 
