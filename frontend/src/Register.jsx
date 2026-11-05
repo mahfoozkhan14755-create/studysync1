@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+const API_BASE_URL = 'https://studysync1-xzci.onrender.com';
+
 function Register({ switchToLogin }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -11,7 +13,7 @@ function Register({ switchToLogin }) {
     e.preventDefault();
     setMsg('');
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
@@ -49,7 +51,7 @@ function Register({ switchToLogin }) {
           style={{ padding: '14px', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.8)', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.1)', outline: 'none' }}
         />
         <input 
-          type="password" placeholder="Password" value5={password} onChange={(e) => setPassword(e.target.value)} required 
+          type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required 
           style={{ padding: '14px', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.8)', color: '#fff', border: '1px solid rgba(255, 255, 255, 0.1)', outline: 'none' }}
         />
         <button type="submit" style={{ padding: '14px', background: '#4ade80', color: '#064e3b', fontWeight: 'bold', border: 'none', borderRadius: '10px', cursor: 'pointer' }}>
