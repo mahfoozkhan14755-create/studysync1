@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
+// Dynamic API & Socket URL (Localhost ya Render production automatic pick karega)
+const API_BASE_URL = window.location.hostname === 'localhost' 
+  ? 'http://localhost:5000' 
+  : 'https://studysync1-xzci.onrender.com';
+
 let socket;
 
 function App() {
@@ -36,9 +41,9 @@ function App() {
   const lastX = useRef(0);
   const lastY = useRef(0);
 
-  // Initialize Socket Connection securely pointing to localhost:5000
+  // Initialize Socket Connection securely pointing to dynamic URL
   useEffect(() => {
-    socket = io('http://localhost:5000', {
+    socket = io(API_BASE_URL, {
       transports: ['websocket', 'polling']
     });
 
@@ -114,7 +119,7 @@ function App() {
 
   const fetchRooms = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/rooms');
+      const response = await fetch(`${API_BASE_URL}/api/rooms`);
       const data = await response.json();
       if (response.ok) {
         setActiveRooms(data);
@@ -129,7 +134,7 @@ function App() {
     setMessage('');
     setSuccessMessage('');
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
@@ -155,7 +160,7 @@ function App() {
     setMessage('');
     setSuccessMessage('');
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -177,7 +182,7 @@ function App() {
   const handleCreateRoom = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/rooms/create', {
+      const response = await fetch(`${API_BASE_URL}/api/rooms/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: roomName, hostName: loggedInUser?.name }),
@@ -208,7 +213,7 @@ function App() {
     e.preventDefault();
     if (!joinCode) return;
     try {
-      const response = await fetch('http://localhost:5000/api/rooms');
+      const response = await fetch(`${API_BASE_URL}/api/rooms`);
       const data = await response.json();
       if (response.ok) {
         const found = data.find(r => r.code === joinCode.trim().toUpperCase());
@@ -250,7 +255,7 @@ function App() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/rooms/upload', {
+      const response = await fetch(`${API_BASE_URL}/api/rooms/upload`, {
         method: 'POST',
         body: formData,
       });
